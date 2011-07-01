@@ -15,6 +15,14 @@ int main(void){
     SDL_Event event;
 
     while(1) {
+        glMatrixMode( GL_PROJECTION );
+        glLoadIdentity();
+        glOrtho( 0, 400, 400, 0, -1, 1 );
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glRectf(10, 20, 50, 70);
+        SDL_GL_SwapBuffers();
         while(SDL_PollEvent(&event)) {
             if(event.type == SDL_QUIT) {
                 SDL_Quit();
