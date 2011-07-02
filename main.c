@@ -1,7 +1,11 @@
 #include <stdio.h>
-#include <SDL.h>
+/* #include <SDL.h>
 #include <SDL_opengl.h>
-#include <GL/glext.h>
+#include <GL/glew.h>*/
+
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <SDL.h>
 
 void setup_rendering() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -18,8 +22,8 @@ void start_rendering() {
 }
 
 void setupVBO() {
-    GLuint VBOID;
-    glGenBuffers(1, &VBOID);
+    GLuint vboId;
+    //glGenBuffers(1, &vboId);
 }
 
 int handle_events() {
@@ -46,6 +50,13 @@ int main(void){
     if (surface == NULL) {
         fprintf(stderr, "Failed to initialize OpenGL: %s\n", SDL_GetError());
         return 1;
+    }
+
+    GLenum err = glewInit();
+    if (GLEW_OK != err) {
+          /*  Problem: glewInit failed, something is seriously wrong. */
+          fprintf(stderr, "Failed to initialize GLEW: %s\n", glewGetErrorString(err));
+          return 1;
     }
 
     printf("OpenGL Version is %s\n", glGetString(GL_VERSION));
