@@ -1,7 +1,39 @@
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
+#include <GL/glext.h>
 
+void setup_rendering() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0f, 0.0f, 0.0f);
+}
+
+void start_rendering() {
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    glOrtho(0, 400, 400, 0, -100, 100 );
+
+    setup_rendering();
+    glRectf(10, 20, 50, 70);
+}
+
+void setupVBO() {
+    GLuint VBOID;
+    glGenBuffers(1, &VBOID);
+}
+
+int handle_events() {
+    SDL_Event event;
+    while(SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            return 1;
+        }
+        else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int main(void){
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) != 0){
@@ -11,23 +43,18 @@ int main(void){
     SDL_WM_SetCaption("OpenGL test window", "OpenGL");
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_Surface *surface = SDL_SetVideoMode(400, 400, 32, SDL_OPENGL);
+    if (surface == NULL) {
+        fprintf(stderr, "Failed to initialize OpenGL: %s\n", SDL_GetError());
+        return 1;
+    }
 
-    SDL_Event event;
-
+    printf("OpenGL Version is %s\n", glGetString(GL_VERSION));
     while(1) {
-        glMatrixMode( GL_PROJECTION );
-        glLoadIdentity();
-        glOrtho( 0, 400, 400, 0, -1, 1 );
-
-        glClear(GL_COLOR_BUFFER_BIT);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glRectf(10, 20, 50, 70);
+        start_rendering();
         SDL_GL_SwapBuffers();
-        while(SDL_PollEvent(&event)) {
-            if(event.type == SDL_QUIT) {
-                SDL_Quit();
-                exit(0);
-            }
+        if(handle_events() == 1) {
+            SDL_Quit();
+            exit(0);
         }
     }
 }
