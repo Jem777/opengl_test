@@ -1,11 +1,10 @@
 #include <stdio.h>
-/* #include <SDL.h>
-#include <SDL_opengl.h>
-#include <GL/glew.h>*/
 
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <SDL.h>
+
+#include "vertex_buffer.h"
 
 void setup_rendering() {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -19,11 +18,6 @@ void start_rendering() {
 
     setup_rendering();
     glRectf(10, 20, 50, 70);
-}
-
-void setupVBO() {
-    GLuint vboId;
-    //glGenBuffers(1, &vboId);
 }
 
 int handle_events() {
@@ -59,10 +53,12 @@ int main(void){
           return 1;
     }
 
+    setup_vbo();
+    SDL_GL_SwapBuffers();
     printf("OpenGL Version is %s\n", glGetString(GL_VERSION));
     while(1) {
-        start_rendering();
-        SDL_GL_SwapBuffers();
+        //start_rendering();
+        //SDL_GL_SwapBuffers();
         if(handle_events() == 1) {
             SDL_Quit();
             exit(0);
