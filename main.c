@@ -7,17 +7,15 @@
 #include "vertex_buffer.h"
 
 void setup_rendering() {
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+    glFrustum(0, 20, 20, 0, 0, 10);
+    //glRotatef()
+    //glTranslatef(-1.0f, 0.0f, 0.0f);
+    glScalef(0.3f, 0.3f, 0.3f);
+    glRotatef(90, -1,0,0);
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0f, 0.0f, 0.0f);
-}
-
-void start_rendering() {
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    glOrtho(0, 400, 400, 0, -100, 100 );
-
-    setup_rendering();
-    glRectf(10, 20, 50, 70);
 }
 
 int handle_events() {
@@ -53,13 +51,21 @@ int main(void){
           return 1;
     }
 
-    setup_vbo();
-    SDL_GL_SwapBuffers();
     printf("OpenGL Version is %s\n", glGetString(GL_VERSION));
+    setup_rendering();
+    buffer_t buffer = create_vbo(10, 10);
     while(1) {
-        //start_rendering();
-        //SDL_GL_SwapBuffers();
+        //glScalef(1.0, 1.0, 1.1f);
+        glRotatef(10, 0,0,1);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        draw_vbo(buffer);
+        glColor3f(1.0f, 1.0f, 0.0f);
+        draw_vbo_raw(buffer);
+        SDL_GL_SwapBuffers();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        SDL_Delay(500);
         if(handle_events() == 1) {
+            destroy_vbo(buffer);
             SDL_Quit();
             exit(0);
         }

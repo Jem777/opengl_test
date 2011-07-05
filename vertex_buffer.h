@@ -22,6 +22,10 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 typedef struct {
@@ -32,6 +36,21 @@ typedef struct {
     float s2, t2;
 } vertex_t;
 
-void setup_vbo();
-void test_fill_vertices(vertex_t *vertices, unsigned short length);
+typedef struct {
+    vertex_t *vertices;
+    unsigned short *indices;
+    unsigned short length;
+    GLuint vertex_vboid;
+    GLuint index_vboid;
+    unsigned short xrange;
+    unsigned short yrange;
+} buffer_t;
+
+buffer_t create_vbo(unsigned short, unsigned short);
+void destroy_vbo(buffer_t);
+void draw_vbo(buffer_t);
+void draw_vbo_raw(buffer_t buffer);
+void plot_function(vertex_t *vertices, unsigned short length, float start, float end);
+void plot_function2d(buffer_t buffer);
+void setVertex(vertex_t *vertices, int i, float x, float y, float z);
 #endif
